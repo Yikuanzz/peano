@@ -1,0 +1,49 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  # 启动应用
+  backend:run:
+    desc: "启动应用"
+    env:
+      CGO_ENABLED: 1
+    cmds:
+      - task: backend:fmt
+      - cd backend && go run app/cmd/main.go --env app/cmd/.env
+
+  # 构建应用
+  backend:build:
+    desc: "构建 Linux 二进制（从任意平台交叉编译）"
+    env:
+      CGO_ENABLED: "0"
+      GOOS: "linux"
+      GOARCH: "amd64"
+    cmds:
+      - cd backend && go env GOOS GOARCH CGO_ENABLED
+      - cd backend && task backend:fmt
+      - cd backend && go build -ldflags="-s -w" -o ./build/peano-backend ./app/cmd/main.go
+
+  # 生成 Swagger
+  backend:swagger:
+    desc: "生成 Swagger"
+    cmds:
+      - cd backend && swag init -g app/cmd/main.go -o app/docs --parseDependency --parseInternal --parseDepth 1
+
+  # 格式化
+  backend:fmt:
+    desc: "格式化代码"
+    cmds:
+      - cd backend && go fmt ./...
+
+  # 启动前端
+  frontend:run:
+    desc: "启动前端"
+    cmds:
+      - cd frontend && bun run dev
+
+  # 构建前端
+  frontend:build:
+    desc: "构建前端"
+    cmds:
+      - cd frontend && bunx vite build
