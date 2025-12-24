@@ -1,0 +1,16 @@
+{
+  "title": "Acount Login",
+  "username": "Username",
+  "usernameTooShort": "Username must be at least 3 characters long",
+  "usernameTooLong": "Username must be less than 12 characters long",
+  "usernameRequired": "Username is required",
+  "usernamePlaceholder": "Please enter your username",
+  "password": "Password",
+  "passwordTooShort": "Password must be at least 8 characters long",
+  "passwordTooLong": "Password must be less than 12 characters long",
+  "passwordRequired": "Password is required",
+  "passwordPlaceholder": "Please enter your password",
+  "login": "Login",
+  "loginFailed": "Login failed",
+  "loginSuccess": "{{nick_name}} Login success"
+}

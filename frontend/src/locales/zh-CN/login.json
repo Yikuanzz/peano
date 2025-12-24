@@ -1,0 +1,16 @@
+{
+  "title": "账号登录",
+  "username": "账号",
+  "usernameTooShort": "账号必须至少3个字符",
+  "usernameTooLong": "账号必须小于12个字符",
+  "usernameRequired": "账号是必填项",
+  "usernamePlaceholder": "请输入账号",
+  "password": "密码",
+  "passwordTooShort": "密码必须至少8个字符",
+  "passwordTooLong": "密码必须小于12个字符",
+  "passwordPlaceholder": "请输入密码",
+  "passwordRequired": "密码是必填项",
+  "login": "登录",
+  "loginFailed": "登录失败",
+  "loginSuccess": "{{nick_name}} 登录成功"
+}
