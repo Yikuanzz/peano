@@ -1,0 +1,928 @@
+definitions:
+  app_internal_handler_file.UploadFileResp:
+    properties:
+      file_id:
+        description: 文件ID
+        type: integer
+      file_name:
+        description: 文件名
+        type: string
+      file_url:
+        description: 文件访问URL
+        type: string
+    type: object
+  app_internal_handler_item.CreateItemReq:
+    properties:
+      content:
+        example: 这是一个项目
+        maxLength: 1000
+        minLength: 3
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/backend_app_types_meta.ItemStatus'
+        enum:
+        - normal
+        - done
+        - marked
+        example: normal
+      tags:
+        example:
+        - 1
+        - 2
+        - 3
+        items:
+          type: integer
+        maxItems: 10
+        minItems: 1
+        type: array
+    required:
+    - content
+    type: object
+  app_internal_handler_item.GetDailyItemCountResp:
+    properties:
+      daily_item_counts:
+        items:
+          $ref: '#/definitions/backend_app_types_dto.DailyItemCountDTO'
+        type: array
+    type: object
+  app_internal_handler_item.GetItemListResp:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/backend_app_types_dto.ItemDTO'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  app_internal_handler_item.UpdateItemReq:
+    properties:
+      content:
+        example: 这是一个项目
+        maxLength: 1000
+        minLength: 3
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/backend_app_types_meta.ItemStatus'
+        enum:
+        - normal
+        - done
+        - marked
+        example: normal
+      tags:
+        example:
+        - 1
+        - 2
+        - 3
+        items:
+          type: integer
+        maxItems: 10
+        minItems: 1
+        type: array
+    type: object
+  app_internal_handler_tag.CreateTagReq:
+    properties:
+      color:
+        maxLength: 12
+        minLength: 3
+        type: string
+      icon:
+        maxLength: 255
+        minLength: 3
+        type: string
+      tag_name:
+        example: 工作
+        maxLength: 12
+        minLength: 1
+        type: string
+      tag_value:
+        example: work
+        maxLength: 32
+        minLength: 1
+        type: string
+    required:
+    - tag_name
+    - tag_value
+    type: object
+  app_internal_handler_tag.GetTagListResp:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      tags:
+        items:
+          $ref: '#/definitions/backend_app_types_dto.TagDTO'
+        type: array
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  app_internal_handler_tag.UpdateTagReq:
+    properties:
+      color:
+        maxLength: 12
+        minLength: 3
+        type: string
+      icon:
+        maxLength: 255
+        minLength: 3
+        type: string
+      tag_name:
+        maxLength: 12
+        minLength: 1
+        type: string
+      tag_value:
+        maxLength: 32
+        minLength: 1
+        type: string
+    type: object
+  app_internal_handler_user.GetUserInfoResp:
+    properties:
+      avatar:
+        example: https://example.com/avatar.jpg
+        type: string
+      nick_name:
+        example: 爱丽丝
+        type: string
+      user_id:
+        description: 用户基本信息
+        example: 1
+        type: integer
+      username:
+        example: alice123
+        type: string
+    type: object
+  app_internal_handler_user.LoginReq:
+    properties:
+      password:
+        example: password123
+        maxLength: 16
+        minLength: 8
+        type: string
+      username:
+        example: alice123
+        maxLength: 32
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  app_internal_handler_user.LoginResp:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  app_internal_handler_user.RefreshTokenReq:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    required:
+    - refresh_token
+    type: object
+  app_internal_handler_user.RefreshTokenResp:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  app_internal_handler_user.UpateUserInfoReq:
+    properties:
+      avatar:
+        example: https://example.com/avatar.jpg
+        type: string
+      nick_name:
+        example: 爱丽丝
+        type: string
+    type: object
+  app_internal_handler_user.UpateUserInfoResp:
+    properties:
+      avatar:
+        example: https://example.com/avatar.jpg
+        type: string
+      nick_name:
+        example: 爱丽丝
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  backend_app_types_dto.DailyItemCountDTO:
+    properties:
+      count:
+        type: integer
+      date:
+        type: string
+    type: object
+  backend_app_types_dto.ItemDTO:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      item_id:
+        type: integer
+      status:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/backend_app_types_dto.TagDTO'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  backend_app_types_dto.TagDTO:
+    properties:
+      color:
+        type: string
+      icon:
+        type: string
+      tag_id:
+        type: integer
+      tag_name:
+        type: string
+      tag_value:
+        type: string
+    type: object
+  backend_app_types_meta.ItemStatus:
+    enum:
+    - normal
+    - done
+    - marked
+    type: string
+    x-enum-varnames:
+    - ItemStatusNormal
+    - ItemStatusDone
+    - ItemStatusMarked
+  backend_utils_handle.Response:
+    properties:
+      code:
+        description: 响应码，0 表示成功
+        example: 0
+        type: integer
+      data:
+        description: 响应数据（可选）
+      message:
+        description: 响应消息（可选）
+        example: 操作成功
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: 这是一个基于 Go 和 Gin 框架的 API 服务
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Backend API
+  version: "1.0"
+paths:
+  /api/file/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 上传文件到服务器，支持多种文件类型
+      parameters:
+      - description: 要上传的文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_file.UploadFileResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      summary: 上传文件
+      tags:
+      - 文件管理
+  /api/item:
+    post:
+      consumes:
+      - application/json
+      description: 创建一个新项目
+      parameters:
+      - description: 创建项目请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_item.CreateItemReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.ItemDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建项目
+      tags:
+      - 项目管理
+  /api/item/{item_id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除指定项目
+      parameters:
+      - description: 项目ID
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 项目不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除项目
+      tags:
+      - 项目管理
+    get:
+      consumes:
+      - application/json
+      description: 获取指定项目的详细信息
+      parameters:
+      - description: 项目ID
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.ItemDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 项目不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取项目
+      tags:
+      - 项目管理
+    put:
+      consumes:
+      - application/json
+      description: 更新指定项目的信息
+      parameters:
+      - description: 项目ID
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      - description: 更新项目请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_item.UpdateItemReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.ItemDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 项目不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新项目
+      tags:
+      - 项目管理
+  /api/item/daily-count:
+    get:
+      consumes:
+      - application/json
+      description: 获取每日项目数量
+      parameters:
+      - description: 开始日期
+        in: query
+        name: date_start
+        required: true
+        type: string
+      - description: 结束日期
+        in: query
+        name: date_end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_item.GetDailyItemCountResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取每日项目数量
+      tags:
+      - 项目管理
+  /api/item/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取项目列表，支持分页和筛选
+      parameters:
+      - description: 开始日期
+        in: query
+        name: date_start
+        type: string
+      - description: 结束日期
+        in: query
+        name: date_end
+        type: string
+      - description: 状态
+        in: query
+        name: status
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页条数
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_item.GetItemListResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取项目列表
+      tags:
+      - 项目管理
+  /api/tag:
+    post:
+      consumes:
+      - application/json
+      description: 创建一个新标签
+      parameters:
+      - description: 创建标签请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_tag.CreateTagReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.TagDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建标签
+      tags:
+      - 标签管理
+  /api/tag/{tag_id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除指定标签
+      parameters:
+      - description: 标签ID
+        in: path
+        name: tag_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 标签不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除标签
+      tags:
+      - 标签管理
+    get:
+      consumes:
+      - application/json
+      description: 获取指定标签的详细信息
+      parameters:
+      - description: 标签ID
+        in: path
+        name: tag_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.TagDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 标签不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取标签
+      tags:
+      - 标签管理
+    put:
+      consumes:
+      - application/json
+      description: 更新指定标签的信息
+      parameters:
+      - description: 标签ID
+        in: path
+        name: tag_id
+        required: true
+        type: integer
+      - description: 更新标签请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_tag.UpdateTagReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/backend_app_types_dto.TagDTO'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "404":
+          description: 标签不存在
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新标签
+      tags:
+      - 标签管理
+  /api/tag/list:
+    get:
+      consumes:
+      - application/json
+      description: 获取标签列表，支持分页
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页条数
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_tag.GetTagListResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取标签列表
+      tags:
+      - 标签管理
+  /api/user/info:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的基本信息和菜单列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_user.GetUserInfoResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户信息
+      tags:
+      - 用户认证
+    put:
+      consumes:
+      - application/json
+      description: 更新当前登录用户的基本信息和菜单列表
+      parameters:
+      - description: 更新用户信息请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_user.UpateUserInfoReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_user.UpateUserInfoResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新用户信息
+      tags:
+      - 用户认证
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户名、密码和验证码进行登录，返回访问令牌和刷新令牌
+      parameters:
+      - description: 登录请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_user.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_user.LoginResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "401":
+          description: 用户名或密码错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      summary: 用户登录
+      tags:
+      - 用户认证
+  /api/user/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: 使用刷新令牌获取新的访问令牌和刷新令牌
+      parameters:
+      - description: 刷新令牌请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/app_internal_handler_user.RefreshTokenReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/backend_utils_handle.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/app_internal_handler_user.RefreshTokenResp'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "401":
+          description: 刷新令牌无效或已过期
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/backend_utils_handle.Response'
+      summary: 刷新访问令牌
+      tags:
+      - 用户认证
+schemes:
+- http
+- https
+swagger: "2.0"
