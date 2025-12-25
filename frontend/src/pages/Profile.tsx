@@ -26,6 +26,35 @@ import { getUserInfo, updateUserInfo } from "@/api/userApi";
 import { uploadFile } from "@/api/fileApi";
 import type { DailyItemCountDTO } from "@/types/item";
 import { Kanban, Bolt } from "lucide-react";
+import { env } from "@/utils/env";
+
+// 处理图片 URL - 支持反向代理
+const getImageUrl = (url: string | undefined): string => {
+  if (!url) return "";
+
+  // 如果已经是路径格式（以 / 开头），直接返回（反向代理会处理）
+  if (url.startsWith("/")) {
+    return url;
+  }
+
+  // 如果是完整 URL
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    // 如果包含 localhost，提取路径部分使用反向代理
+    if (url.includes("localhost")) {
+      try {
+        const urlObj = new URL(url);
+        return urlObj.pathname; // 返回 /uploads/... 路径
+      } catch {
+        return url;
+      }
+    }
+    // 生产环境的完整 URL，直接返回
+    return url;
+  }
+
+  // 其他情况，直接返回
+  return url;
+};
 
 // 热力图组件
 function ActivityHeatmap({ data }: { data: DailyItemCountDTO[] }) {
@@ -186,7 +215,13 @@ function EditProfileDialog({
     setIsUploading(true);
     try {
       const result = await uploadFile(file);
-      setAvatar(result.file_url);
+
+      // 处理图片 URL - 提取 /uploads/... 路径部分
+      let imageUrl = result.file_url;
+      const urlObj = new URL(imageUrl);
+      imageUrl = urlObj.pathname; // 获取 /uploads/2025/12/25/xxx.png
+
+      setAvatar(imageUrl);
       toast.success("头像上传成功");
     } catch (error) {
       toast.error("头像上传失败");
@@ -258,7 +293,7 @@ function EditProfileDialog({
             <div className="flex flex-col items-center gap-4">
               {/* 头像预览 */}
               <Avatar className="h-20 w-20 md:h-24 md:w-24">
-                <AvatarImage src={avatar} alt="预览" />
+                <AvatarImage src={getImageUrl(avatar)} alt="预览" />
                 <AvatarFallback className="text-2xl">
                   {nickName?.[0] || "U"}
                 </AvatarFallback>
@@ -399,7 +434,10 @@ export default function Profile() {
         <CardContent className="p-3 md:p-6 pt-0">
           <div className="flex flex-col items-center sm:flex-row sm:items-center gap-3 md:gap-4">
             <Avatar className="h-16 w-16 md:h-20 md:w-20">
-              <AvatarImage src={user?.avatar} alt={user?.nick_name} />
+              <AvatarImage
+                src={getImageUrl(user?.avatar)}
+                alt={user?.nick_name}
+              />
               <AvatarFallback>{user?.nick_name?.[0] || "U"}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0 text-center sm:text-left">
