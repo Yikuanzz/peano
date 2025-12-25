@@ -129,7 +129,10 @@ function IconPicker({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute z-20 mt-1 p-2 bg-background border rounded-lg shadow-lg w-64 max-h-64 overflow-y-auto">
+          <div
+            className="absolute z-20 mt-1 p-2 bg-background border rounded-lg shadow-lg w-64 max-h-64 overflow-y-auto right-0"
+            style={{ transform: "translateX(22%)" }}
+          >
             <div className="grid grid-cols-6 gap-1">
               {ICON_OPTIONS.map((option) => {
                 const IconComponent = option.icon;
