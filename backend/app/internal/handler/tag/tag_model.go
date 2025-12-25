@@ -9,14 +9,14 @@ type TagURI struct {
 type CreateTagReq struct {
 	TagName  string  `json:"tag_name" binding:"required,min=1,max=12" label:"标签名" example:"工作"`
 	TagValue string  `json:"tag_value" binding:"required,min=1,max=32" label:"标签值" example:"work"`
-	Icon     *string `json:"icon" binding:"omitempty,min=3,max=255" label:"图标"`
+	Icon     *string `json:"icon" binding:"omitempty,min=1,max=3" label:"图标"`
 	Color    *string `json:"color" binding:"omitempty,min=3,max=12" label:"颜色"`
 }
 
 type UpdateTagReq struct {
 	TagName  *string `json:"tag_name" binding:"omitempty,min=1,max=12" label:"标签名"`
 	TagValue *string `json:"tag_value" binding:"omitempty,min=1,max=32" label:"标签值"`
-	Icon     *string `json:"icon" binding:"omitempty,min=3,max=255" label:"图标"`
+	Icon     *string `json:"icon" binding:"omitempty,min=1,max=3" label:"图标"`
 	Color    *string `json:"color" binding:"omitempty,min=3,max=12" label:"颜色"`
 }
 
