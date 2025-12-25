@@ -20,7 +20,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/peano">
         <Routes>
           {/* 登录页 */}
           <Route path="/login" element={<Login />} />

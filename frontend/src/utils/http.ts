@@ -6,7 +6,7 @@ import { env } from "./env";
 
 // 创建 axios 实例
 export const http = axios.create({
-  baseURL: `${env.apiUrl}${env.apiPrefix}`,
+  baseURL: `${env.apiPrefix}`,
   timeout: env.apiTimeout,
   headers: {
     "Content-Type": "application/json",

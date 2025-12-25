@@ -59,10 +59,20 @@
   border-radius: 0.375rem;
   margin: 0.5em 0;
   cursor: pointer;
+  display: block;
 }
 
 .tiptap-editor img.ProseMirror-selectednode {
   outline: 2px solid hsl(var(--primary));
+}
+
+/* 便签卡片中的图片样式 */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  margin: 0.5em 0;
+  display: block;
 }
 
 /* Placeholder 样式 */

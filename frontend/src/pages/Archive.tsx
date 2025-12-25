@@ -24,11 +24,69 @@ import {
   Star,
   Calendar,
   ChevronDown,
+  Heart,
+  Zap,
+  Flame,
+  Coffee,
+  Book,
+  Briefcase,
+  Code,
+  Music,
+  Camera,
+  Palette,
+  Lightbulb,
+  Target,
+  Trophy,
+  Flag,
+  Bell,
+  Clock,
+  Mail,
+  Phone,
+  Map,
+  Home,
+  Building,
+  Smile,
 } from "lucide-react";
 import type { ItemDTO, ItemStatus, TagDTO } from "@/types/item";
 import { getItemList, updateItem, deleteItem } from "@/api/itemApi";
 import { getTagList } from "@/api/tagApi";
 import { formatDateTime } from "@/utils/date";
+
+// 可选图标列表
+const ICON_OPTIONS = [
+  { name: "Star", icon: Star },
+  { name: "Heart", icon: Heart },
+  { name: "Zap", icon: Zap },
+  { name: "Flame", icon: Flame },
+  { name: "Coffee", icon: Coffee },
+  { name: "Book", icon: Book },
+  { name: "Briefcase", icon: Briefcase },
+  { name: "Code", icon: Code },
+  { name: "Music", icon: Music },
+  { name: "Camera", icon: Camera },
+  { name: "Palette", icon: Palette },
+  { name: "Lightbulb", icon: Lightbulb },
+  { name: "Target", icon: Target },
+  { name: "Trophy", icon: Trophy },
+  { name: "Flag", icon: Flag },
+  { name: "Bell", icon: Bell },
+  { name: "Clock", icon: Clock },
+  { name: "Calendar", icon: Calendar },
+  { name: "Mail", icon: Mail },
+  { name: "Phone", icon: Phone },
+  { name: "Map", icon: Map },
+  { name: "Home", icon: Home },
+  { name: "Building", icon: Building },
+  { name: "Smile", icon: Smile },
+];
+
+// 渲染标签图标的辅助函数
+const renderTagIcon = (iconName?: string) => {
+  const iconOption = ICON_OPTIONS.find((opt) => opt.name === iconName);
+  if (!iconOption) return null;
+  const IconComponent = iconOption.icon;
+  return <IconComponent size={14} className="inline" />;
+};
 
 // 便签卡片组件
 function ItemCard({
@@ -66,9 +124,14 @@ function ItemCard({
                   key={tag.tag_id}
                   variant="secondary"
                   className="text-xs"
-                  style={{ backgroundColor: tag.color + "20" }}
+                  style={{
+                    backgroundColor: tag.color + "20",
+                    color: tag.color,
+                  }}
                 >
-                  {tag.icon && <span className="mr-1">{tag.icon}</span>}
+                  {tag.icon && (
+                    <span className="mr-1">{renderTagIcon(tag.icon)}</span>
+                  )}
                   {tag.tag_name}
                 </Badge>
               ))}
@@ -211,7 +274,9 @@ function ItemFilters({
                         );
                       }}
                     >
-                      {tag.icon && <span className="mr-1">{tag.icon}</span>}
+                      {tag.icon && (
+                        <span className="mr-1">{renderTagIcon(tag.icon)}</span>
+                      )}
                       {tag.tag_name}
                     </Badge>
                   ))}
@@ -330,7 +395,7 @@ export default function Archive() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-20 md:pb-6">
       <ItemFilters tags={tags} onFilterChange={setFilters} />
 
       {/* 列表 */}

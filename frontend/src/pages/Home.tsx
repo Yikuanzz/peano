@@ -23,6 +23,28 @@ import {
   ListOrdered,
   Loader2,
   Bookmark,
+  Heart,
+  Zap,
+  Flame,
+  Coffee,
+  Book,
+  Briefcase,
+  Code,
+  Music,
+  Camera,
+  Palette,
+  Lightbulb,
+  Target,
+  Trophy,
+  Flag,
+  Bell,
+  Clock,
+  Mail,
+  Phone,
+  Map,
+  Home as HomeIcon,
+  Building,
+  Smile,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +58,117 @@ import { createTag, updateTag, deleteTag, getTagList } from "@/api/tagApi";
 import { uploadFile } from "@/api/fileApi";
 import { formatRelativeTime } from "@/utils/date";
 import "@/styles/editor.css";
+
+// 可选图标列表
+const ICON_OPTIONS = [
+  { name: "Star", icon: Star },
+  { name: "Heart", icon: Heart },
+  { name: "Zap", icon: Zap },
+  { name: "Flame", icon: Flame },
+  { name: "Coffee", icon: Coffee },
+  { name: "Book", icon: Book },
+  { name: "Briefcase", icon: Briefcase },
+  { name: "Code", icon: Code },
+  { name: "Music", icon: Music },
+  { name: "Camera", icon: Camera },
+  { name: "Palette", icon: Palette },
+  { name: "Lightbulb", icon: Lightbulb },
+  { name: "Target", icon: Target },
+  { name: "Trophy", icon: Trophy },
+  { name: "Flag", icon: Flag },
+  { name: "Bell", icon: Bell },
+  { name: "Clock", icon: Clock },
+  { name: "Calendar", icon: Calendar },
+  { name: "Mail", icon: Mail },
+  { name: "Phone", icon: Phone },
+  { name: "Map", icon: Map },
+  { name: "Home", icon: HomeIcon },
+  { name: "Building", icon: Building },
+  { name: "Smile", icon: Smile },
+];
+
+// 渲染标签图标的辅助函数
+const renderTagIcon = (iconName?: string) => {
+  const iconOption = ICON_OPTIONS.find((opt) => opt.name === iconName);
+  if (!iconOption) return null;
+  const IconComponent = iconOption.icon;
+  return <IconComponent size={14} className="inline" />;
+};
+
+// 图标选择器组件
+function IconPicker({
+  value,
+  onChange,
+  color = "#3b82f6",
+}: {
+  value: string;
+  onChange: (iconName: string) => void;
+  color?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectedIcon = ICON_OPTIONS.find((opt) => opt.name === value);
+  const SelectedIconComponent = selectedIcon?.icon || Star;
+
+  return (
+    <div className="relative">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-10 h-8 p-0"
+        style={{ borderColor: color }}
+      >
+        <SelectedIconComponent size={16} style={{ color }} />
+      </Button>
+
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-10"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute z-20 mt-1 p-2 bg-background border rounded-lg shadow-lg w-64 max-h-64 overflow-y-auto">
+            <div className="grid grid-cols-6 gap-1">
+              {ICON_OPTIONS.map((option) => {
+                const IconComponent = option.icon;
+                const isSelected = value === option.name;
+                return (
+                  <Button
+                    key={option.name}
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      onChange(option.name);
+                      setIsOpen(false);
+                    }}
+                    className={`p-2 h-auto relative ${
+                      isSelected ? "bg-accent" : ""
+                    }`}
+                    title={option.name}
+                  >
+                    <IconComponent
+                      size={18}
+                      style={{ color: isSelected ? color : "#64748b" }}
+                    />
+                    {isSelected && (
+                      <Check
+                        size={10}
+                        className="absolute top-0 right-0 text-primary"
+                      />
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 // 便签卡片组件
 function ItemCard({
@@ -73,9 +206,14 @@ function ItemCard({
                   key={tag.tag_id}
                   variant="secondary"
                   className="text-xs"
-                  style={{ backgroundColor: tag.color + "20" }}
+                  style={{
+                    backgroundColor: tag.color + "20",
+                    color: tag.color,
+                  }}
                 >
-                  {tag.icon && <span className="mr-1">{tag.icon}</span>}
+                  {tag.icon && (
+                    <span className="mr-1">{renderTagIcon(tag.icon)}</span>
+                  )}
                   {tag.tag_name}
                 </Badge>
               ))}
@@ -208,9 +346,11 @@ function TagManager({
 }) {
   const [editingTagId, setEditingTagId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState("");
+  const [editingIcon, setEditingIcon] = useState("Star");
+  const [editingColor, setEditingColor] = useState("#3b82f6");
   const [isAdding, setIsAdding] = useState(false);
   const [newTagName, setNewTagName] = useState("");
-  const [newTagIcon, setNewTagIcon] = useState("");
+  const [newTagIcon, setNewTagIcon] = useState("Star");
   const [newTagColor, setNewTagColor] = useState("#3b82f6");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -218,13 +358,15 @@ function TagManager({
   const handleEditTag = (tag: TagDTO) => {
     setEditingTagId(tag.tag_id);
     setEditingName(tag.tag_name);
+    setEditingIcon(tag.icon || "Star");
+    setEditingColor(tag.color || "#3b82f6");
   };
 
   // 保存标签编辑
   const handleSaveEdit = async (tagId: number) => {
     const name = editingName.trim();
 
-    // 如果名称为空，删除标签
+    // 如果名称为空,删除标签
     if (!name) {
       try {
         await deleteTag(tagId);
@@ -239,7 +381,11 @@ function TagManager({
 
     // 更新标签
     try {
-      await updateTag(tagId, { tag_name: name });
+      await updateTag(tagId, {
+        tag_name: name,
+        icon: editingIcon,
+        color: editingColor,
+      });
       toast.success("标签已更新");
       onTagsChange();
       setEditingTagId(null);
@@ -252,6 +398,8 @@ function TagManager({
   const handleCancelEdit = () => {
     setEditingTagId(null);
     setEditingName("");
+    setEditingIcon("Star");
+    setEditingColor("#3b82f6");
   };
 
   // 添加新标签
@@ -267,12 +415,12 @@ function TagManager({
       await createTag({
         tag_name: name,
         tag_value: name.toLowerCase().replace(/\s+/g, "-"),
-        icon: newTagIcon.trim() || undefined,
+        icon: newTagIcon,
         color: newTagColor,
       });
       toast.success("标签已添加");
       setNewTagName("");
-      setNewTagIcon("");
+      setNewTagIcon("Star");
       setNewTagColor("#3b82f6");
       setIsAdding(false);
       onTagsChange();
@@ -329,11 +477,29 @@ function TagManager({
                           handleCancelEdit();
                         }
                       }}
-                      onBlur={() => handleSaveEdit(tag.tag_id)}
                       autoFocus
-                      className="h-7 w-20 text-xs px-2"
-                      style={{ borderColor: tag.color }}
+                      className="h-7 w-24 text-xs px-2"
+                      style={{ borderColor: editingColor }}
                     />
+                    <IconPicker
+                      value={editingIcon}
+                      onChange={setEditingIcon}
+                      color={editingColor}
+                    />
+                    <Input
+                      type="color"
+                      value={editingColor}
+                      onChange={(e) => setEditingColor(e.target.value)}
+                      className="w-10 h-7 cursor-pointer p-0.5"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleSaveEdit(tag.tag_id)}
+                      className="h-7 w-7 p-0"
+                    >
+                      <Check className="h-3 w-3" />
+                    </Button>
                   </div>
                 ) : (
                   // 显示模式
@@ -347,9 +513,9 @@ function TagManager({
                     }}
                     onClick={() => handleEditTag(tag)}
                   >
-                    {tag.icon && <span className="mr-1">{tag.icon}</span>}
-                    <span>{tag.tag_name}</span>
-                    <Edit3 className="h-2.5 w-2.5 ml-1" />
+                    {renderTagIcon(tag.icon)}
+                    <span className="mx-1">{tag.tag_name}</span>
+                    <Edit3 className="h-2.5 w-2.5" />
                   </Badge>
                 )}
               </div>
@@ -372,12 +538,10 @@ function TagManager({
                 placeholder="标签名称"
                 className="flex-1 h-8 text-xs"
               />
-              <Input
+              <IconPicker
                 value={newTagIcon}
-                onChange={(e) => setNewTagIcon(e.target.value)}
-                placeholder="📝"
-                maxLength={2}
-                className="w-12 h-8 text-xs text-center"
+                onChange={setNewTagIcon}
+                color={newTagColor}
               />
               <Input
                 type="color"
@@ -398,7 +562,7 @@ function TagManager({
         )}
 
         <p className="text-xs text-muted-foreground">
-          💡 点击标签可编辑，清空名称可删除
+          💡 点击标签可编辑,清空名称可删除
         </p>
       </CardContent>
     </Card>
@@ -619,7 +783,15 @@ function ItemEditor({
     setIsUploading(true);
     try {
       const result = await uploadFile(file);
-      editor.chain().focus().setImage({ src: result.file_url }).run();
+
+      // 处理图片 URL
+      let imageUrl = result.file_url;
+
+      // 提取 /uploads/... 路径部分
+      const urlObj = new URL(imageUrl);
+      imageUrl = urlObj.pathname; // 获取 /uploads/2025/12/25/xxx.png
+
+      editor.chain().focus().setImage({ src: imageUrl }).run();
       toast.success("图片已插入");
     } catch (error) {
       toast.error("图片上传失败");
@@ -707,7 +879,9 @@ function ItemEditor({
                       );
                     }}
                   >
-                    {tag.icon && <span className="mr-1">{tag.icon}</span>}
+                    {tag.icon && (
+                      <span className="mr-1">{renderTagIcon(tag.icon)}</span>
+                    )}
                     {tag.tag_name}
                   </Badge>
                 ))}
@@ -812,7 +986,7 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-20 md:pb-6">
       <ItemEditor tags={tags} onSubmit={fetchData} onTagsChange={fetchData} />
       <ItemTimeline
         items={items}

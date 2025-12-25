@@ -22,7 +22,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router";
 import { LogOut, Edit, Upload, Loader2, Settings } from "lucide-react";
 import { getDailyItemCount } from "@/api/itemApi";
-import { updateUserInfo } from "@/api/userApi";
+import { getUserInfo, updateUserInfo } from "@/api/userApi";
 import { uploadFile } from "@/api/fileApi";
 import type { DailyItemCountDTO } from "@/types/item";
 import { Kanban, Bolt } from "lucide-react";
@@ -41,7 +41,7 @@ function ActivityHeatmap({ data }: { data: DailyItemCountDTO[] }) {
   }, []);
 
   // 移动端显示最近 120 天，桌面端显示 365 天
-  const daysToShow = isMobile ? 179 : 364;
+  const daysToShow = isMobile ? 139 : 364;
 
   // 生成日期
   const generateDates = () => {
@@ -351,7 +351,7 @@ export default function Profile() {
           date_start: oneYearAgo.toISOString().split("T")[0],
           date_end: today.toISOString().split("T")[0],
         }),
-        import("@/api/userApi").then(({ getUserInfo }) => getUserInfo()),
+        getUserInfo(),
       ]);
 
       // 处理热力图数据
@@ -382,7 +382,6 @@ export default function Profile() {
   const handleUpdate = async () => {
     // 重新获取用户信息
     try {
-      const { getUserInfo } = await import("@/api/userApi");
       const userInfo = await getUserInfo();
       updateUser(userInfo);
     } catch (error) {
@@ -448,7 +447,7 @@ export default function Profile() {
       </Card>
 
       {/* 设置卡片 */}
-      <Card>
+      <Card className="hidden md:block">
         <CardHeader>
           <div className="flex items-center gap-2 text-primary">
             <Bolt />
