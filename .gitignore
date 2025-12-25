@@ -2,6 +2,12 @@
 /backend/build/*
 /frontend/dist/*
 
+# Backend
+/backend/data.db
+/backend/uploads/*
+/backend/sql/*
+/backend/**/*.log
+
 # Go
 *.exe
 *.exe~
