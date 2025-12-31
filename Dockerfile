@@ -56,6 +56,9 @@ COPY --from=backend-builder /app/peano-backend .
 # 从构建阶段复制前端构建产物
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
+# 复制运行时所需的 .env 文件（仅后端）
+COPY backend/app/cmd/.env ./
+
 # 复制 SQLite 数据库（如果存在）
 COPY backend/data.db ./data.db
 
