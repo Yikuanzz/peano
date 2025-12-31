@@ -3,7 +3,7 @@ import { Toaster } from "sonner";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import NotFoundPage from "@/pages/Notfound";
+import NotFoundPage from "@/pages/NotFound";
 import Home from "@/pages/Home";
 import Archive from "@/pages/Archive";
 import Profile from "@/pages/Profile";
